@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Armazenamento BR</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #121212;
+            color: #e0e0e0;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #bb86fc;
+            font-size: 2.2rem;
+        }
+
+        h2 {
+            margin: 30px 0 20px;
+            color: #03dac6;
+            font-size: 1.5rem;
+        }
+
+        form {
+            background: #1e1e1e;
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+
+        .input-group {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            min-width: 150px;
+            margin-right: 10px;
+            font-weight: 500;
+        }
+
+        .input-group input,
+        .input-group select {
+            padding: 10px;
+            border: 1px solid #333;
+            border-radius: 4px;
+            background-color: #2d2d2d;
+            color: #e0e0e0;
+            font-size: 1rem;
+            flex-grow: 1;
+        }
+
+        .input-group select {
+            width: 80px;
+            margin-left: 10px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            background-color: #bb86fc;
+            color: #121212;
+            border: none;
+            padding: 12px 20px;
+            font-size: 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #9a67ea;
+        }
+
+        .clear-btn {
+            background-color: #cf6679;
+        }
+
+        .export-btn {
+            background-color: #03dac6;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #1e1e1e;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 14px;
+            text-align: left;
+            border-bottom: 1px solid #333;
+        }
+
+        th {
+            background-color: #2d2d2d;
+            color: #03dac6;
+            font-weight: 600;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover {
+            background-color: #2a2a2a;
+        }
+
+        .price-per-gb, .price-per-tb {
+            font-weight: bold;
+        }
+
+        .price-per-gb {
+            color: #03dac6;
+        }
+
+        .price-per-tb {
+            color: #bb86fc;
+        }
+
+        .delete-btn {
+            background-color: #cf6679;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .delete-btn:hover {
+            background-color: #b5495b;
+        }
+
+        .summary {
+            background: #1e1e1e;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+
+        .summary h3 {
+            color: #03dac6;
+            margin-bottom: 10px;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .input-group {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .input-group label {
+                margin-bottom: 5px;
+            }
+            
+            .input-group select {
+                width: auto;
+                margin-left: 0;
+                margin-top: 5px;
+            }
+            
+            th, td {
+                padding: 10px 6px;
+                font-size: 0.85rem;
+            }
+            
+            .controls {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Calculadora de Armazenamento BR</h1>
+        
+        <form id="product-form">
+            <div class="input-group">
+                <label for="product-name">Nome do Produto:</label>
+                <input type="text" id="product-name" required placeholder="Ex: SSD Kingston A400 240GB">
+            </div>
+
+            <div class="input-group">
+                <label for="capacity">Capacidade:</label>
+                <input type="number" id="capacity" step="any" min="0.01" required placeholder="Ex: 250">
+                
+                <select id="unit">
+                    <option value="GB">GB</option>
+                    <option value="TB">TB</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label for="price">Preço (R$):</label>
+                <input type="number" id="price" step="0.01" min="0.01" required placeholder="Ex: 199.90">
+            </div>
+
+            <div class="controls">
+                <button type="submit">Adicionar Produto</button>
+                <button type="button" class="clear-btn" id="clear-btn">Limpar Tudo</button>
+                <button type="button" class="export-btn" id="export-btn">Exportar Dados</button>
+            </div>
+        </form>
+
+        <div id="results-section">
+            <h2>Comparação de Produtos</h2>
+            <table id="products-table">
+                <thead>
+                    <tr>
+                        <th>Produto</th>
+                        <th>Capacidade</th>
+                        <th>Preço Total</th>
+                        <th>Preço por GB</th>
+                        <th>Preço por TB</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="table-body">
+                    <!-- Produtos serão adicionados aqui dinamicamente -->
+                </tbody>
+            </table>
+            
+            <div class="summary" id="summary">
+                <h3>Resumo Estatístico</h3>
+                <div class="summary-item">
+                    <span>Melhor preço por GB:</span>
+                    <span id="best-price-per-gb">-</span>
+                </div>
+                <div class="summary-item">
+                    <span>Pior preço por GB:</span>
+                    <span id="worst-price-per-gb">-</span>
+                </div>
+                <div class="summary-item">
+                    <span>Média preço por GB:</span>
+                    <span id="avg-price-per-gb">-</span>
+                </div>
+                <div class="summary-item">
+                    <span>Total de produtos:</span>
+                    <span id="total-products">0</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Array para armazenar os produtos
+        let products = [];
+
+        // Constantes DOM para evitar buscas repetidas
+        const form = document.getElementById('product-form');
+        const tableBody = document.getElementById('table-body');
+        const clearBtn = document.getElementById('clear-btn');
+        const exportBtn = document.getElementById('export-btn');
+
+        // Elementos do resumo
+        const bestPricePerGbEl = document.getElementById('best-price-per-gb');
+        const worstPricePerGbEl = document.getElementById('worst-price-per-gb');
+        const avgPricePerGbEl = document.getElementById('avg-price-per-gb');
+        const totalProductsEl = document.getElementById('total-products');
+
+        // Função para converter unidades para GB (usando sistema binário)
+        function convertToGB(capacity, unit) {
+            if (unit === 'TB') {
+                // 1 TB = 1024 GB (sistema binário usado em armazenamento digital)
+                return capacity * 1024;
+            }
+            return capacity;
+        }
+
+        // Função para converter unidades para TB
+        function convertToTB(capacity, unit) {
+            if (unit === 'GB') {
+                // Converter GB para TB (dividindo por 1024)
+                return capacity / 1024;
+            }
+            return capacity; // Já está em TB
+        }
+
+        // Função para calcular preço por GB
+        function calculatePricePerGB(price, capacity, unit) {
+            const capacityInGB = convertToGB(capacity, unit);
+            
+            // Previnir divisão por zero
+            if (capacityInGB <= 0) return 0;
+            
+            return price / capacityInGB;
+        }
+
+        // Função para calcular preço por TB
+        function calculatePricePerTB(price, capacity, unit) {
+            const capacityInTB = convertToTB(capacity, unit);
+            
+            // Previnir divisão por zero
+            if (capacityInTB <= 0) return 0;
+            
+            return price / capacityInTB;
+        }
+
+        // Função para formatar moeda BRL
+        function formatCurrency(value) {
+            return new Intl.NumberFormat('pt-BR', {
+                style: 'currency',
+                currency: 'BRL',
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }).format(value);
+        }
+
+        // Função para formatar preço por GB
+        function formatPricePerGB(pricePerGB) {
+            return `${formatCurrency(pricePerGB)}/GB`;
+        }
+
+        // Função para formatar preço por TB
+        function formatPricePerTB(pricePerTB) {
+            return `${formatCurrency(pricePerTB)}/TB`;
+        }
+
+        // Função para atualizar o resumo estatístico
+        function updateSummary() {
+            if (products.length === 0) {
+                bestPricePerGbEl.textContent = '-';
+                worstPricePerGbEl.textContent = '-';
+                avgPricePerGbEl.textContent = '-';
+                totalProductsEl.textContent = '0';
+                return;
+            }
+
+            // Calcular preços por GB para todos os produtos
+            const pricesPerGB = products.map(product => 
+                calculatePricePerGB(product.price, product.capacity, product.unit)
+            );
+
+            // Encontrar melhor e pior preço por GB
+            const bestPrice = Math.min(...pricesPerGB);
+            const worstPrice = Math.max(...pricesPerGB);
+            const avgPrice = pricesPerGB.reduce((sum, price) => sum + price, 0) / pricesPerGB.length;
+
+            // Atualizar elementos do DOM
+            bestPricePerGbEl.textContent = formatPricePerGB(bestPrice);
+            worstPricePerGbEl.textContent = formatPricePerGB(worstPrice);
+            avgPricePerGbEl.textContent = formatPricePerGB(avgPrice);
+            totalProductsEl.textContent = products.length;
+        }
+
+        // Função para renderizar a tabela
+        function renderTable() {
+            // Limpar conteúdo atual
+            tableBody.innerHTML = '';
+            
+            // Adicionar cada produto à tabela
+            products.forEach((product, index) => {
+                const row = document.createElement('tr');
+                
+                // Cálculos
+                const pricePerGB = calculatePricePerGB(product.price, product.capacity, product.unit);
+                const pricePerTB = calculatePricePerTB(product.price, product.capacity, product.unit);
+                
+                row.innerHTML = `
+                    <td>${product.name}</td>
+                    <td>${product.capacity} ${product.unit}</td>
+                    <td>${formatCurrency(product.price)}</td>
+                    <td class="price-per-gb">${formatPricePerGB(pricePerGB)}</td>
+                    <td class="price-per-tb">${formatPricePerTB(pricePerTB)}</td>
+                    <td>
+                        <button class="delete-btn" data-index="${index}">Remover</button>
+                    </td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+            
+            // Adicionar eventos aos botões de remoção
+            document.querySelectorAll('.delete-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const index = parseInt(this.getAttribute('data-index'));
+                    removeProduct(index);
+                });
+            });
+            
+            // Salvar no localStorage
+            saveToLocalStorage();
+            
+            // Atualizar resumo estatístico
+            updateSummary();
+        }
+
+        // Função para adicionar produto
+        function addProduct(name, capacity, unit, price) {
+            const product = {
+                name,
+                capacity,
+                unit,
+                price
+            };
+            
+            products.push(product);
+            renderTable();
+        }
+
+        // Função para remover produto
+        function removeProduct(index) {
+            products.splice(index, 1);
+            renderTable();
+        }
+
+        // Função para limpar todos os produtos
+        function clearAllProducts() {
+            if (confirm('Tem certeza que deseja remover todos os produtos?')) {
+                products = [];
+                renderTable();
+            }
+        }
+
+        // Função para exportar dados como CSV
+        function exportToCSV() {
+            if (products.length === 0) {
+                alert('Nenhum produto para exportar!');
+                return;
+            }
+
+            let csvContent = 'Produto,Capacidade,Preço Total,Preço por GB,Preço por TB\n';
+            
+            products.forEach(product => {
+                const pricePerGB = calculatePricePerGB(product.price, product.capacity, product.unit);
+                const pricePerTB = calculatePricePerTB(product.price, product.capacity, product.unit);
+                
+                csvContent += `"${product.name}",`;
+                csvContent += `"${product.capacity} ${product.unit}",`;
+                csvContent += `"${product.price}",`;
+                csvContent += `"${pricePerGB.toFixed(2)}",`;
+                csvContent += `"${pricePerTB.toFixed(2)}"\n`;
+            });
+
+            // Criar link para download
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.setAttribute('href', url);
+            link.setAttribute('download', 'comparacao_armazenamento.csv');
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Função para salvar no localStorage
+        function saveToLocalStorage() {
+            try {
+                localStorage.setItem('storage-calc-products', JSON.stringify(products));
+            } catch (e) {
+                console.error('Falha ao salvar no localStorage:', e);
+            }
+        }
+
+        // Função para carregar do localStorage
+        function loadFromLocalStorage() {
+            try {
+                const stored = localStorage.getItem('storage-calc-products');
+                if (stored) {
+                    products = JSON.parse(stored);
+                    renderTable();
+                }
+            } catch (e) {
+                console.error('Falha ao carregar do localStorage:', e);
+                products = [];
+            }
+        }
+
+        // Event listener para o formulário
+        form.addEventListener('submit', function(e) {
+            e.preventDefault(); // Prevenir comportamento padrão do formulário
+            
+            // Obter valores dos inputs
+            const name = document.getElementById('product-name').value.trim();
+            const capacity = parseFloat(document.getElementById('capacity').value);
+            const unit = document.getElementById('unit').value;
+            const price = parseFloat(document.getElementById('price').value);
+            
+            // Validação básica
+            if (!name || isNaN(capacity) || isNaN(price) || capacity <= 0 || price <= 0) {
+                alert('Por favor, preencha todos os campos corretamente.');
+                return;
+            }
+            
+            // Adicionar produto
+            addProduct(name, capacity, unit, price);
+            
+            // Limpar formulário
+            form.reset();
+        });
+
+        // Event listener para o botão de limpar
+        clearBtn.addEventListener('click', clearAllProducts);
+
+        // Event listener para o botão de exportar
+        exportBtn.addEventListener('click', exportToCSV);
+
+        // Inicialização do app
+        document.addEventListener('DOMContentLoaded', function() {
+            loadFromLocalStorage();
+        });
+    </script>
+</body>
+</html>
