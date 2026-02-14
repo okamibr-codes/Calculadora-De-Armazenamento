@@ -1,7 +1,5 @@
 # 💾 Calculadora de Armazenamento BR
 
-### 📝 Descrição
-
 O **Calculadora de Armazenamento BR** é uma aplicação web local (offline) desenvolvida em HTML, CSS e JavaScript puro, projetada para ajudar usuários a comparar o custo-benefício de diferentes produtos de armazenamento digital 💿💾, como discos rígidos (HDD) 💿, unidades de estado sólido (SSD) ⚡, pendrives 📱 e outros dispositivos de armazenamento 📦.
 
 ### 🔧 Funcionalidades Principais
